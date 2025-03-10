@@ -1,0 +1,8 @@
+
+decl
+  float pi;
+enddecl
+begin
+  pi = 3.14;
+  write(1.618 * pi);
+end
