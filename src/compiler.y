@@ -74,6 +74,20 @@
         symbol_count++;
     }
 
+    void printTree(Node* root, int level) {
+    if (root == NULL) {
+        printf("printTree: AST is NULL!\n");
+        return;
+    }
+    
+    for (int i = 0; i < level; i++) printf("  ");  
+    printf("%s\n", root->token);
+
+    printTree(root->left, level + 1);
+    printTree(root->right, level + 1);
+}
+
+
     void print_symbol_table() {
         printf("\nSymbol Table:\n--------------------\n");
         printf("Variable  | Type  | Value\n");
@@ -188,13 +202,25 @@ expr:
     | '(' expr ')' { $$ = $2; }
     ;
 %%
-
 int main() {
-    printf("Starting the parser...\n");
-    if (yyparse() == 0) {
+    printf("Starting the parser...\n"); // Debugging message
+
+    if (yyparse() == 0) {  // If parsing is successful
         printf("Parsing complete. Syntax tree:\n");
-        printTree(syntaxTreeRoot, 0);
-        print_symbol_table();
+
+        if (syntaxTreeRoot == NULL) {
+            printf("Error: AST is NULL!\n");
+        } else {
+            printTree(syntaxTreeRoot, 0);  // Print AST
+        }
+
+        print_symbol_table();  // Print symbol table
+    } else {
+        printf("Parsing failed.\n");
     }
+    
     return 0;
 }
+
+
+
