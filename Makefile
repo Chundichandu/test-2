@@ -1,22 +1,21 @@
+# Define directories
+SRC_DIR = src
+BIN_DIR = bin
+OUTPUT = $(BIN_DIR)/compiler
 
+# Define source files
+LEX_FILE = $(SRC_DIR)/compiler.l
+YACC_FILE = $(SRC_DIR)/compiler.y
 
-CC=gcc
-CFLAGS=-Wall -g
-SRC_DIR=src
-BIN_DIR=bin
-TARGET=$(BIN_DIR)/compiler
+all: $(OUTPUT)
 
-SRCS=$(wildcard $(SRC_DIR)/*.c)
-OBJS=$(SRCS:.c=.o)
+$(OUTPUT): $(LEX_FILE) $(YACC_FILE) | $(BIN_DIR)
+	yacc -d $(YACC_FILE)
+	lex $(LEX_FILE)
+	gcc -o $(OUTPUT) lex.yy.c y.tab.c -lm
 
-all: $(TARGET)
-
-$(TARGET): $(OBJS)
+$(BIN_DIR):
 	mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) -ly -lfl
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(SRC_DIR)/*.o $(TARGET)
+	rm -f $(OUTPUT) y.tab.h y.tab.c lex.yy.c
